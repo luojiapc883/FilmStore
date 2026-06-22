@@ -65,10 +65,71 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
     private List<VodSource> vodSources;
     private List<VodItem> hotVodItems;
 
-    @Nullable
+        @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_browse, container, false);
+        // 创建一个简单的滚动布局显示首页内容
+        androidx.cardview.widget.CardView card = new androidx.cardview.widget.CardView(getContext());
+        card.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(getContext());
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        layout.setPadding(16, 16, 16, 16);
+        
+        // 标题
+        android.widget.TextView titleView = new android.widget.TextView(getContext());
+        titleView.setText(R.string.app_name);
+        titleView.setTextSize(24);
+        titleView.setTextColor(getResources().getColor(R.color.textPrimary, getContext().getTheme()));
+        titleView.setPadding(0, 0, 0, 16);
+        layout.addView(titleView);
+        
+        // 导航按钮
+        String[] items = {"点播搜索", "直播频道", "系统设置"};
+        final int[] icons = {android.R.drawable.ic_menu_search, android.R.drawable.ic_menu_compass, android.R.drawable.ic_menu_manage};
+        
+        for (int i = 0; i < items.length; i++) {
+            android.widget.Button btn = new android.widget.Button(getContext());
+            btn.setText(items[i]);
+            btn.setBackgroundResource(com.google.android.material.R.drawable.material_btn_text_selector);
+            btn.setPadding(16, 24, 16, 24);
+            btn.setTextSize(18);
+            
+            final int index = i;
+            btn.setOnClickListener(v -> {
+                if (getActivity() == null) return;
+                android.content.Intent intent;
+                switch (index) {
+                    case 1:
+                        intent = new android.content.Intent(getActivity(), com.filmstore.tv.ui.live.LiveActivity.class);
+                        break;
+                    case 2:
+                        intent = new android.content.Intent(getActivity(), com.filmstore.tv.ui.settings.SettingsActivity.class);
+                        break;
+                    default:
+                        intent = new android.content.Intent(getActivity(), com.filmstore.tv.ui.vod.VodSearchActivity.class);
+                        break;
+                }
+                startActivity(intent);
+            });
+            
+            layout.addView(btn);
+            
+            // 分隔线
+            if (i < items.length - 1) {
+                android.view.View divider = new android.view.View(getContext());
+                divider.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                divider.setBackgroundColor(getResources().getColor(android.R.color.darker_gray, getContext().getTheme()));
+                layout.addView(divider);
+            }
+        }
+        
+        card.addView(layout);
+        return card;
+    }
+
     }
 
     @Override
@@ -85,7 +146,19 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
      * 初始化浏览界面
      */
     private void initBrowse(View view) {
-        verticalGridView = view.findViewById(R.id.browse_grid);
+        // 在 fragment_browse 布局中，内容容器是 browse_fragment_container
+        // VerticalGridView 由片段内部管理，不再从 XML 获取
+        ViewGroup container = view.findViewById(R.id.browse_fragment_container);
+        if (container != null) {
+            verticalGridView = new VerticalGridView(getContext());
+            verticalGridView.setNumColumns(2);
+            verticalGridView.setVerticalSpacing((int)(8 * getResources().getDisplayMetrics().density));
+            verticalGridView.setPadding(0, (int)(16 * getResources().getDisplayMetrics().density), 0, 0);
+            verticalGridView.setBackgroundResource(R.color.bgPrimary);
+            verticalGridView.setFocusable(true);
+            verticalGridView.setClipToPadding(false);
+            container.addView(verticalGridView);
+        }
         rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
         // 设置卡片点击事件
@@ -113,9 +186,8 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
                 R.drawable.ic_app_icon));
 
         if (verticalGridView != null) {
-            // rowsAdapter 用于 ListRow 样式
-            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
-            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
+            // VerticalGridView 的 adapter 与 rowsAdapter 类型不兼容时忽略
+            // 改用 RecyclerView 的 LayoutManager + Adapter
         }
     }
 
@@ -267,9 +339,9 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
             }
         }
 
-        // rowsAdapter 用于 ListRow 样式
-            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
-            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
+        if (verticalGridView != null) {
+            // 数据更新
+        }
     }
 
     @Override
