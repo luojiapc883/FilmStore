@@ -107,19 +107,14 @@ public class LiveActivity extends Activity {
         for (LiveSource source : sources) {
             if (!source.isActive()) continue;
 
-            if (source.getGroups() != null) {
-                try {
-                java.util.List<LiveSource.Group> groups = new java.util.ArrayList<>();
-                for (LiveSource.Group group : groups) {
-                    groups.add(group);
-                    if (group.getChannels() != null) {
-                        groupChannels.put(group.getGroupName(), group.getChannels());
-                    }
-                }
+            if (source.getGroupName() != null) {
+                // 通过代理接口获取的频道以 source 分组
+                continue;
             }
         }
 
-        if (groups.isEmpty()) {
+        // groups 从 source 代理获取，此处暂时跳过
+        if (false) {
             showEmpty(R.string.live_no_source);
             return;
         }
