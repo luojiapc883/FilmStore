@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.leanback.app.ErrorSupportFragment;
 
-import com.filmstore.tv.BuildConfig;
 import com.filmstore.tv.FilmStoreApp;
 import com.filmstore.tv.R;
 import com.filmstore.tv.api.ApiClient;

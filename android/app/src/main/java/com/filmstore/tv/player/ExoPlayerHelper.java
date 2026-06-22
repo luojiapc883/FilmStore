@@ -16,9 +16,6 @@ import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
-import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.ProgressiveMediaSource;
-import androidx.media3.exoplayer.source.hls.HlsMediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 
 import com.filmstore.tv.FilmStoreApp;
@@ -117,20 +114,9 @@ public class ExoPlayerHelper {
         Uri uri = Uri.parse(url);
         MediaItem mediaItem = MediaItem.fromUri(uri);
 
-        MediaSource mediaSource;
-        if (url.contains(".m3u8") || url.contains(".m3u")) {
-            // HLS 流
-            DataSource.Factory dataSourceFactory = createDataSourceFactory();
-            mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(mediaItem);
-        } else {
-            // 常规视频文件（MP4, FLV, AVI 等）
-            DataSource.Factory dataSourceFactory = createDataSourceFactory();
-            mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(mediaItem);
-        }
-
-        exoPlayer.setMediaSource(mediaSource);
+        DataSource.Factory dataSourceFactory = createDataSourceFactory();
+        exoPlayer.setMediaItem(mediaItem);
+        exoPlayer.setMediaSourceFactory(new DefaultMediaSourceFactory(dataSourceFactory));
         exoPlayer.prepare();
         exoPlayer.setPlayWhenReady(true);
     }

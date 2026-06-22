@@ -54,4 +54,32 @@ public class LiveSource {
 
     public boolean isDefault() { return isDefault; }
     public void setDefault(boolean aDefault) { isDefault = aDefault; }
+
+    /**
+     * 直播频道模型（内部类，用于 LiveActivity）
+     */
+    public static class Channel {
+        private String name;
+        private String url;
+        private String logo;
+        private String group;
+
+        public Channel() {}
+        public Channel(String name, String url) {
+            this.name = name;
+            this.url = url;
+        }
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public String getUrl() { return url; }
+        public void setUrl(String url) { this.url = url; }
+
+        public String getLogo() { return logo; }
+        public void setLogo(String logo) { this.logo = logo; }
+
+        public String getGroup() { return group; }
+        public void setGroup(String group) { this.group = group; }
+    }
 }

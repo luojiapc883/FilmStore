@@ -21,6 +21,7 @@ import com.filmstore.tv.FilmStoreApp;
 import com.filmstore.tv.R;
 import com.filmstore.tv.api.ApiClient;
 import com.filmstore.tv.model.LiveSource;
+import com.filmstore.tv.model.LiveChannel;
 import com.filmstore.tv.ui.player.PlayerActivity;
 
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ public class LiveActivity extends Activity {
     /**
      * 播放频道
      */
-    private void playChannel(LiveSource.Channel channel) {
+    private void playChannel(LiveChannel channel) {
         if (channel == null || channel.getUrl() == null) return;
 
         Intent intent = new Intent(this, PlayerActivity.class);
