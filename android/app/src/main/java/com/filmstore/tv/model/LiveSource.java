@@ -56,8 +56,10 @@ public class LiveSource {
     public boolean isDefault() { return isDefault; }
     public void setDefault(boolean aDefault) { isDefault = aDefault; }
 
+    // ==================== 内部类 ====================
+
     /**
-     * 直播频道模型（内部类，用于 LiveActivity）
+     * 直播频道模型
      */
     public static class Channel {
         private String name;
@@ -83,7 +85,6 @@ public class LiveSource {
         public String getGroup() { return group; }
         public void setGroup(String group) { this.group = group; }
     }
-}
 
     /**
      * 频道分组模型
@@ -99,3 +100,5 @@ public class LiveSource {
 
         public List<Channel> getChannels() { return channels; }
         public void setChannels(List<Channel> channels) { this.channels = channels; }
+    }
+}
