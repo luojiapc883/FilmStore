@@ -108,10 +108,10 @@ public class LiveActivity extends Activity {
             if (!source.isActive()) continue;
 
             if (source.getGroups() != null) {
-                for (LiveSource.Group group : source.getGroups()) {
+                if (source.getGroups() != null) for (LiveSource.Group group : source.getGroups()) {
                     groups.add(group);
                     if (group.getChannels() != null) {
-                        groupChannels.put(group.getName(), group.getChannels());
+                        groupChannels.put(group.getGroupName(), group.getChannels());
                     }
                 }
             }
@@ -136,7 +136,7 @@ public class LiveActivity extends Activity {
         LiveSource.Group group = groups.get(index);
         channels.clear();
 
-        List<LiveSource.Channel> channelList = groupChannels.get(group.getName());
+        List<LiveSource.Channel> channelList = groupChannels.get(group.getGroupName());
         if (channelList != null) {
             channels.addAll(channelList);
         }

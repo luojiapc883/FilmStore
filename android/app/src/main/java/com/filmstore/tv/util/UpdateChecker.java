@@ -65,7 +65,7 @@ public class UpdateChecker {
         }
         isChecking = true;
 
-        int currentVersion = BuildConfig.VERSION_CODE;
+        int currentVersion = 1;
 
         apiClient.checkUpdate(currentVersion, new ApiClient.ApiCallback<UpdateInfo>() {
             @Override

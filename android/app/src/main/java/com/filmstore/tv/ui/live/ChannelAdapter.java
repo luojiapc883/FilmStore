@@ -49,8 +49,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         LiveSource.Channel channel = channels.get(position);
         holder.text1.setText(channel.getName() != null ? channel.getName() : "未知频道");
 
-        String status = channel.getStatus();
-        String quality = channel.getQuality();
         StringBuilder subtitle = new StringBuilder();
         if (status != null) {
             subtitle.append(status);

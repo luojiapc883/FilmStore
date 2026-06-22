@@ -97,7 +97,7 @@ public class VodCategoryActivity extends Activity {
         isLoading = true;
         currentPage = 1;
 
-        FilmStoreApp.getInstance().getApiClient().getCategoryVod(sourceId, categoryId, currentPage,
+        FilmStoreApp.getInstance().getApiClient().getCategoryVod(Long.parseLong(sourceId), categoryId, currentPage,
                 new ApiClient.ApiCallback<List<VodItem>>() {
                     @Override
                     public void onSuccess(List<VodItem> result) {
@@ -128,7 +128,7 @@ public class VodCategoryActivity extends Activity {
         isLoading = true;
         currentPage++;
 
-        FilmStoreApp.getInstance().getApiClient().getCategoryVod(sourceId, categoryId, currentPage,
+        FilmStoreApp.getInstance().getApiClient().getCategoryVod(Long.parseLong(sourceId), categoryId, currentPage,
                 new ApiClient.ApiCallback<List<VodItem>>() {
                     @Override
                     public void onSuccess(List<VodItem> result) {

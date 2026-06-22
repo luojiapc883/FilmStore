@@ -34,8 +34,8 @@ public class AnnouncementDetailActivity extends Activity {
     }
 
     private void initViews() {
-        titleView = findViewById(R.id.search_input);
-        contentView = findViewById(R.id.empty_text);
+        titleView = findViewById(R.id.announcement_title);
+        contentView = findViewById(R.id.announcement_content);
         closeButton = findViewById(R.id.retry_button);
     }
 

@@ -95,7 +95,7 @@ public class ExoPlayerHelper {
                 if (stateListener != null) {
                     String msg = error.getLocalizedMessage();
                     if (msg == null) {
-                        msg = "播放错误 (" + error.errorCodeName + ")";
+                        msg = "播放错误 (" + error.getErrorCodeName() + ")";
                     }
                     stateListener.onPlayerError(msg);
                 }
@@ -116,7 +116,8 @@ public class ExoPlayerHelper {
 
         DataSource.Factory dataSourceFactory = createDataSourceFactory();
         exoPlayer.setMediaItem(mediaItem);
-        exoPlayer.setMediaSourceFactory(new DefaultMediaSourceFactory(dataSourceFactory));
+        // 用 MediaItem 方式播放
+exoPlayer.setMediaItem(mediaItem);
         exoPlayer.prepare();
         exoPlayer.setPlayWhenReady(true);
     }
@@ -134,7 +135,6 @@ public class ExoPlayerHelper {
 
         OkHttpDataSource.Factory httpDataSourceFactory = new OkHttpDataSource.Factory(httpClient)
                 .setUserAgent("FilmStore-AndroidTV/1.0")
-                .setAllowCrossProtocolRedirects(true);
 
         DefaultDataSource.Factory dataSourceFactory = new DefaultDataSource.Factory(context, httpDataSourceFactory);
         return dataSourceFactory;

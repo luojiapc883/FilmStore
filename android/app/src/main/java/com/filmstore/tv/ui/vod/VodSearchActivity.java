@@ -137,7 +137,7 @@ public class VodSearchActivity extends Activity {
             return;
         }
 
-        String sourceId = vodSources.get(0).getId();
+        long sourceId = vodSources.get(0).getId();
 
         FilmStoreApp.getInstance().getApiClient().searchVod(sourceId, currentKeyword, currentPage,
                 new ApiClient.ApiCallback<List<VodItem>>() {
@@ -178,7 +178,7 @@ public class VodSearchActivity extends Activity {
             return;
         }
 
-        String sourceId = vodSources.get(0).getId();
+        long sourceId = vodSources.get(0).getId();
 
         FilmStoreApp.getInstance().getApiClient().searchVod(sourceId, currentKeyword, currentPage,
                 new ApiClient.ApiCallback<List<VodItem>>() {

@@ -54,7 +54,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         LiveSource.Group group = groups.get(position);
-        holder.textView.setText(group.getName() != null ? group.getName() : "未分组");
+        holder.textView.setText(group.getGroupName() != null ? group.getGroupName() : "未分组");
 
         if (position == selectedPosition) {
             holder.textView.setBackgroundColor(context.getResources().getColor(R.color.bgCardSelected));
