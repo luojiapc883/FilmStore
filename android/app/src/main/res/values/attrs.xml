@@ -19,4 +19,13 @@
         <attr name="themeTextPrimary" />
         <attr name="themeTextSecondary" />
     </declare-styleable>
+
+    <!-- VerticalGridView 布局属性（用于 activity_main.xml） -->
+    <declare-styleable name="com.android.leanback.widget.VerticalGridView">
+        <attr name="numColumns" format="integer" />
+        <attr name="vertical_spacing" format="dimension" />
+        <attr name="row_height" format="dimension|enum">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+    </declare-styleable>
 </resources>
