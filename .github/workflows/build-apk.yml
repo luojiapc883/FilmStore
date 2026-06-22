@@ -20,7 +20,25 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - uses: android-actions/setup-android@v3
+      - name: Setup Android SDK
+        run: |
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          cd $HOME/android-sdk/cmdline-tools
+          curl -sL -o tools.zip \
+            "https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"
+          unzip -q tools.zip
+          mv cmdline-tools latest 2>/dev/null || true
+          ls -la $HOME/android-sdk/cmdline-tools/
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+
+      - name: Accept licenses & install build tools
+        run: |
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+            "platforms;android-34" \
+            "build-tools;34.0.0" > /dev/null 2>&1
 
       - name: Build APK
         working-directory: ./android
