@@ -134,7 +134,7 @@ exoPlayer.setMediaItem(mediaItem);
                 .build();
 
         OkHttpDataSource.Factory httpDataSourceFactory = new OkHttpDataSource.Factory(httpClient)
-                .setUserAgent("FilmStore-AndroidTV/1.0")
+                .setUserAgent("FilmStore-AndroidTV/1.0");
 
         DefaultDataSource.Factory dataSourceFactory = new DefaultDataSource.Factory(context, httpDataSourceFactory);
         return dataSourceFactory;
