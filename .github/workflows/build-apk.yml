@@ -26,19 +26,16 @@ jobs:
         working-directory: ./android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon 2>&1 || true
-          # 如果失败，直接输出来确认
-          echo "=== Exit code: $? ==="
+          ./gradlew assembleDebug --no-daemon
 
-      - name: Show full error
+      - name: Show error details
         if: failure()
         working-directory: ./android
         run: |
+          find app/build/reports -name "*.txt" -exec cat {} \; 2>/dev/null || true
           ls -la app/build/outputs/ 2>/dev/null || echo "No outputs dir"
-          find app/build/reports -name "*.txt" -exec cat {} \; 2>/dev/null || echo "No reports"
 
       - uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: FilmStore-APK
           path: android/app/build/outputs/apk/debug/*.apk
