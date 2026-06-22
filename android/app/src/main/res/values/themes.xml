@@ -32,9 +32,9 @@
 
     <!-- 卡片样式 -->
     <style name="FilmStoreCardView" parent="Widget.Leanback.CardViewStyle">
-        <item name="android:cardBackgroundColor">@color/bgCard</item>
-        <item name="android:cardElevation">4dp</item>
-        <item name="android:cardCornerRadius">8dp</item>
+        <item name="cardBackgroundColor">@color/bgCard</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
     </style>
 
     <!-- 播放器主题 -->
@@ -46,24 +46,10 @@
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
-    <!-- 对话框主题 -->
-    <style name="FilmStoreDialogTheme" parent="Theme.Leanback.Dialog">
-        <item name="android:windowBackground">@color/bgSecondary</item>
-        <item name="android:textColorPrimary">@color/textPrimary</item>
-    </style>
-
     <!-- 按钮样式 -->
-    <style name="FilmStoreButton" parent="Widget.Leanback.Selector">
+    <style name="FilmStoreButton" parent="Widget.AppCompat.Button">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/textPrimary</item>
         <item name="android:background">@drawable/btn_primary</item>
-        <item name="android:padding">12dp 8dp</item>
-    </style>
-
-    <!-- 设置 Preference 主题 -->
-    <style name="FilmStorePreferenceTheme" parent="Theme.Leanback">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/bgPrimary</item>
     </style>
 </resources>
