@@ -113,7 +113,8 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
                 R.drawable.ic_app_icon));
 
         if (verticalGridView != null) {
-            verticalGridView.setAdapter(new ItemBridgeAdapter(rowsAdapter));
+            verticalGridView.setAdapter(rowsAdapter);
+            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
         }
     }
 
@@ -265,7 +266,8 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
             }
         }
 
-        verticalGridView.setAdapter(new ItemBridgeAdapter(rowsAdapter));
+        verticalGridView.setAdapter(rowsAdapter);
+            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
     }
 
     @Override

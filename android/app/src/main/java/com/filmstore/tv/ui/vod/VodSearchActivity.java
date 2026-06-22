@@ -60,7 +60,7 @@ public class VodSearchActivity extends Activity {
     }
 
     private void initViews() {
-        searchInput = findViewById(R.id.search_src_text);
+        searchInput = findViewById(android.R.id.input);
         // 如果没有专门的搜索输入框，我们用 TextView 作为临时方案
         if (searchInput == null) {
             // 在布局中动态创建搜索输入
