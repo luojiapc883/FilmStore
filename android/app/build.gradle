@@ -47,8 +47,8 @@ android {
 dependencies {
     // AndroidX Core
     implementation 'androidx.core:core:1.12.0'
-    implementation 'androidx.leanback:leanback:1.0.0'
-    implementation 'androidx.leanback:leanback-preference:1.0.0'
+    implementation 'androidx.leanback:leanback:1.2.0-alpha02'
+    implementation 'androidx.leanback:leanback-preference:1.2.0-alpha02'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -58,7 +58,7 @@ dependencies {
 
     // TV 相关
     implementation 'androidx.tvprovider:tvprovider:1.1.0'
-    implementation 'androidx.leanback:leanback-paging:1.1.0-alpha09'
+    implementation 'androidx.leanback:leanback-paging:1.1.0-alpha11'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime:2.7.0'
