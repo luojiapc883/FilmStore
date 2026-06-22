@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FilmStore 影视仓</string>
+    <string name="app_name_en">FilmStore</string>
+
+    <!-- 首页 -->
+    <string name="title_home">首页</string>
+    <string name="title_vod">点播</string>
+    <string name="title_live">直播</string>
+    <string name="title_settings">设置</string>
+    <string name="title_search">搜索</string>
+    <string name="title_favorites">收藏</string>
+    <string name="title_history">历史</string>
+
+    <!-- 点播 -->
+    <string name="vod_search_hint">搜索片名…</string>
+    <string name="vod_no_results">没有找到相关内容</string>
+    <string name="vod_load_more">加载更多</string>
+    <string name="vod_all_categories">全部分类</string>
+    <string name="vod_hot">热门推荐</string>
+    <string name="vod_latest">最新更新</string>
+
+    <!-- 直播 -->
+    <string name="live_all">全部频道</string>
+    <string name="live_no_source">未配置直播源</string>
+    <string name="live_loading">正在加载直播源…</string>
+
+    <!-- 播放器 -->
+    <string name="player_loading">正在加载播放地址…</string>
+    <string name="player_error">播放出错</string>
+    <string name="player_retry">重试</string>
+    <string name="player_source_select">选择播放源</string>
+    <string name="player_no_source">暂无可用播放源</string>
+
+    <!-- 设置 -->
+    <string name="settings_server_address">服务器地址</string>
+    <string name="settings_server_hint">请输入 FilmStore 服务端地址（如 http://10.0.0.100:3000）</string>
+    <string name="settings_server_default">http://10.0.0.100:3000</string>
+    <string name="settings_save">保存</string>
+    <string name="settings_about">关于</string>
+    <string name="settings_version">版本</string>
+    <string name="settings_check_update">检查更新</string>
+    <string name="settings_theme">主题切换</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_clear_cache_success">缓存已清除</string>
+    <string name="settings_checking">正在检查更新…</string>
+    <string name="settings_cancel">取消</string>
+    <string name="settings_confirm">确定</string>
+    <string name="settings_save_success">保存成功</string>
+
+    <!-- 公告 -->
+    <string name="announcement_title">公告</string>
+    <string name="announcement_empty">暂无公告</string>
+    <string name="announcement_time">发布时间：%s</string>
+
+    <!-- 更新 -->
+    <string name="update_title">发现新版本</string>
+    <string name="update_download">立即下载</string>
+    <string name="update_later">稍后再说</string>
+    <string name="update_force">强制更新</string>
+    <string name="update_downloading">正在下载… %d%%</string>
+    <string name="update_no_update">已是最新版本</string>
+    <string name="update_new_version">版本 %s 可用</string>
+
+    <!-- 通用 -->
+    <string name="loading">加载中…</string>
+    <string name="error_network">网络连接失败，请检查服务器地址</string>
+    <string name="error_unknown">发生未知错误</string>
+    <string name="retry">重试</string>
+    <string name="back">返回</string>
+    <string name="exit_app">再按一次退出应用</string>
+    <string name="confirm_exit">确认退出？</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+
+    <!-- Leanback 默认搜索 -->
+    <string name="search_menu_title">搜索</string>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主色调 - FilmStore Brand -->
+    <color name="colorPrimary">#FF1A73E8</color>
+    <color name="colorPrimaryDark">#FF1557B0</color>
+    <color name="colorPrimaryLight">#FF4D90FE</color>
+    <color name="colorAccent">#FFFF6D00</color>
+    <color name="colorAccentLight">#FFFF9800</color>
+
+    <!-- 背景色 -->
+    <color name="bgPrimary">#FF121212</color>
+    <color name="bgSecondary">#FF1E1E1E</color>
+    <color name="bgCard">#FF2A2A2A</color>
+    <color name="bgCardSelected">#FF3A3A3A</color>
+
+    <!-- 文字色 -->
+    <color name="textPrimary">#FFE0E0E0</color>
+    <color name="textSecondary">#FF9E9E9E</color>
+    <color name="textAccent">#FFFFFFFF</color>
+
+    <!-- 功能色 -->
+    <color name="errorRed">#FFE53935</color>
+    <color name="successGreen">#FF43A047</color>
+    <color name="warningOrange">#FFFF9800</color>
+    <color name="infoBlue">#FF1E88E5</color>
+
+    <!-- 直播状态 -->
+    <color name="liveOnline">#FF4CAF50</color>
+    <color name="liveOffline">#FF757575</color>
+
+    <!-- 渐变起始色 - 用于卡片 -->
+    <color name="gradientStart">#FF1A73E8</color>
+    <color name="gradientEnd">#FF0D47A1</color>
+
+    <!-- TV 焦点色 -->
+    <color name="focusBorder">#FFFFFFFF</color>
+    <color name="focusBackground">#FF3D7FFF</color>
+
+    <!-- 半透明遮罩 -->
+    <color name="overlayDark">#80000000</color>
+    <color name="overlayLight">#40FFFFFF</color>
+
+    <!-- 分割线 -->
+    <color name="divider">#33FFFFFF</color>
+
+    <!-- Glide 占位色 -->
+    <color name="placeholder">#FF2A2A2A</color>
+</resources>

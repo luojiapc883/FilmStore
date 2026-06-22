@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+.env
+*.db
+*.db-wal
+*.db-shm
+data/uploads/*
+data/backup/*
+!data/uploads/.gitkeep
+!data/backup/.gitkeep
+
+# Build
+public/admin/
+dist/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/

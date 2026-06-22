@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 存储（下载更新用） -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- 安装APK（更新用） -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- TV 设备声明 -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="true" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <application
+        android:name=".FilmStoreApp"
+        android:allowBackup="true"
+        android:banner="@drawable/ic_banner"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FilmStore"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="34">
+
+        <!-- 首页 - Leanback Launcher -->
+        <activity
+            android:name=".ui.home.MainActivity"
+            android:exported="true"
+            android:banner="@drawable/ic_banner"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 点播分类页面 -->
+        <activity
+            android:name=".ui.vod.VodCategoryActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <!-- 点播搜索结果 -->
+        <activity
+            android:name=".ui.vod.VodSearchActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <!-- 点播详情 -->
+        <activity
+            android:name=".ui.vod.VodDetailActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <!-- 直播页面 -->
+        <activity
+            android:name=".ui.live.LiveActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <!-- 播放器页面 -->
+        <activity
+            android:name=".ui.player.PlayerActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:keepScreenOn="true" />
+
+        <!-- 设置页面 -->
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <!-- 公告详情 -->
+        <activity
+            android:name=".ui.announcement.AnnouncementDetailActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+    </application>
+
+</manifest>

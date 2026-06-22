@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  filmstore:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: filmstore-admin
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - JWT_SECRET=${JWT_…ion}
+      - DB_PATH=./data/filmstore.db
+      - UPLOAD_DIR=./data/uploads
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASS=${ADMIN_PASS:-admin123}
+      - ALLOWED_ORIGINS=*
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

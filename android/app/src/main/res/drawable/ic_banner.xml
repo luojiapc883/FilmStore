@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Launcher Banner - 用于电视桌面显示 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="180dp"
+    android:viewportWidth="320"
+    android:viewportHeight="180">
+    <path
+        android:fillColor="#FF1A73E8"
+        android:pathData="M0,0h320v180H0z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M160,70 L140,110 L180,110 Z"
+        android:strokeWidth="0" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M80,50 L60,130 L100,130 Z"
+        android:strokeWidth="0" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M240,50 L220,130 L260,130 Z"
+        android:strokeWidth="0" />
+    <path
+        android:fillColor="#80FFFFFF"
+        android:pathData="M200,80 L190,110 L210,110 Z" />
+    <path
+        android:fillColor="#80FFFFFF"
+        android:pathData="M120,80 L110,110 L130,110 Z" />
+</vector>

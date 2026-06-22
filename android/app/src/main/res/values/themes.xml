@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 基础主题 -->
+    <style name="Theme.FilmStore" parent="Theme.Leanback">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/bgPrimary</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:statusBarColor">@color/bgPrimary</item>
+        <item name="android:navigationBarColor">@color/bgPrimary</item>
+
+        <!-- Leanback 主题覆盖 -->
+        <item name="lb_browse_title_style">@style/FilmStoreTitleText</item>
+        <item name="lb_browse_headers_style">@style/FilmStoreHeaderStyle</item>
+        <item name="lb_card_view_style">@style/FilmStoreCardView</item>
+    </style>
+
+    <!-- 标题字体 -->
+    <style name="FilmStoreTitleText" parent="TextAppearance.Leanback">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- 头部样式 -->
+    <style name="FilmStoreHeaderStyle" parent="Widget.Leanback.Header">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <!-- 卡片样式 -->
+    <style name="FilmStoreCardView" parent="Widget.Leanback.CardViewStyle">
+        <item name="android:cardBackgroundColor">@color/bgCard</item>
+        <item name="android:cardElevation">4dp</item>
+        <item name="android:cardCornerRadius">8dp</item>
+    </style>
+
+    <!-- 播放器主题 -->
+    <style name="Theme.FilmStore.Player" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+    <!-- 对话框主题 -->
+    <style name="FilmStoreDialogTheme" parent="Theme.Leanback.Dialog">
+        <item name="android:windowBackground">@color/bgSecondary</item>
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+    </style>
+
+    <!-- 按钮样式 -->
+    <style name="FilmStoreButton" parent="Widget.Leanback.Selector">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:background">@drawable/btn_primary</item>
+        <item name="android:padding">12dp 8dp</item>
+    </style>
+
+    <!-- 设置 Preference 主题 -->
+    <style name="FilmStorePreferenceTheme" parent="Theme.Leanback">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/bgPrimary</item>
+    </style>
+</resources>

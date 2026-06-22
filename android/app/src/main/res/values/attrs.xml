@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 自定义主题色属性 -->
+    <attr name="themePrimary" format="color" />
+    <attr name="themePrimaryDark" format="color" />
+    <attr name="themeAccent" format="color" />
+    <attr name="themeBackground" format="color" />
+    <attr name="themeCardBackground" format="color" />
+    <attr name="themeTextPrimary" format="color" />
+    <attr name="themeTextSecondary" format="color" />
+
+    <!-- 可声明式主题 -->
+    <declare-styleable name="FilmStoreTheme">
+        <attr name="themePrimary" />
+        <attr name="themePrimaryDark" />
+        <attr name="themeAccent" />
+        <attr name="themeBackground" />
+        <attr name="themeCardBackground" />
+        <attr name="themeTextPrimary" />
+        <attr name="themeTextSecondary" />
+    </declare-styleable>
+</resources>

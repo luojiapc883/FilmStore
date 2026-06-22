@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.leanback.widget.VerticalGridView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/browse_grid"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgPrimary"
+    android:clipToPadding="false"
+    android:focusable="true"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    app:numColumns="2"
+    app:vertical_spacing="8dp"
+    app:row_height="wrap_content" />

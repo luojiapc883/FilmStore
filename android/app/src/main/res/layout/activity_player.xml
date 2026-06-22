@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:keepScreenOn="true">
+
+    <!-- ExoPlayer Surface -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:focusable="true" />
+
+    <!-- 加载指示器 -->
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <!-- 错误提示 -->
+    <RelativeLayout
+        android:id="@+id/error_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:text="@string/player_error"
+            android:textColor="@color/errorRed"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_below="@id/error_text"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_primary"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:text="@string/player_retry"
+            android:textColor="@color/textAccent"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <!-- 源选择 -->
+    <Button
+        android:id="@+id/source_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/btn_secondary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/player_source_select"
+        android:textColor="@color/textPrimary"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+</RelativeLayout>
