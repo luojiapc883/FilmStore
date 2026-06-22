@@ -65,9 +65,9 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
         holder.titleView.setText(item.getTitle() != null ? item.getTitle() : item.getName());
 
         // 预览颜色
-        if (item.getConfig() != null && item.getConfig().getPrimary() != null) {
+        if (item.getConfig() != null && item.getConfig().getPrimaryColor() != null) {
             try {
-                int color = Color.parseColor(item.getConfig().getPrimary());
+                int color = Color.parseColor(item.getConfig().getPrimaryColor());
                 holder.cardView.setCardBackgroundColor(color);
             } catch (Exception e) {
                 holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.bgCard));
@@ -77,11 +77,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
         // 选中状态
         if (item.getName() != null && item.getName().equals(selectedThemeName)) {
             holder.cardView.setCardElevation(8f);
-            holder.cardView.setStrokeWidth(4);
-            holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.colorAccent));
+            // stroke 用其他方式;
+            // setStrokeColor(ContextCompat.getColor(context, R.color.colorAccent));
         } else {
             holder.cardView.setCardElevation(4f);
-            holder.cardView.setStrokeWidth(0);
+            // no stroke;
         }
 
         // 默认标记

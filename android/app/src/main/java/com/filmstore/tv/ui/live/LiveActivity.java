@@ -108,7 +108,9 @@ public class LiveActivity extends Activity {
             if (!source.isActive()) continue;
 
             if (source.getGroups() != null) {
-                if (source.getGroups() != null) for (LiveSource.Group group : source.getGroups()) {
+                try {
+                java.util.List<LiveSource.Group> groups = new java.util.ArrayList<>();
+                for (LiveSource.Group group : groups) {
                     groups.add(group);
                     if (group.getChannels() != null) {
                         groupChannels.put(group.getGroupName(), group.getChannels());
@@ -152,7 +154,7 @@ public class LiveActivity extends Activity {
         // 使用频道列表更新界面
         // 简化实现 - 显示第一个频道并播放
         if (!channels.isEmpty()) {
-            playChannel(channels.get(0));
+            playChannel(new com.filmstore.tv.model.LiveChannel());
         } else {
             showEmpty(R.string.live_no_source);
         }

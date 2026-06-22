@@ -90,7 +90,7 @@ public class VodDetailActivity extends Activity {
      * 加载详情
      */
     private void loadDetail() {
-        FilmStoreApp.getInstance().getApiClient().getVodDetail(sourceId, vodId,
+        FilmStoreApp.getInstance().getApiClient().getVodDetail(Long.parseLong(sourceId), vodId,
                 new ApiClient.ApiCallback<VodItem>() {
                     @Override
                     public void onSuccess(VodItem result) {

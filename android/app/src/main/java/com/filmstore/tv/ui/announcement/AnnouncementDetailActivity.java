@@ -34,8 +34,8 @@ public class AnnouncementDetailActivity extends Activity {
     }
 
     private void initViews() {
-        titleView = findViewById(R.id.announcement_title);
-        contentView = findViewById(R.id.announcement_content);
+        titleView = findViewById(android.R.id.text1);
+        contentView = findViewById(android.R.id.text2);
         closeButton = findViewById(R.id.retry_button);
     }
 
