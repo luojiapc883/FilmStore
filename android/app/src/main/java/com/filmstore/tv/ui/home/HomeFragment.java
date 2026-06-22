@@ -113,7 +113,8 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
                 R.drawable.ic_app_icon));
 
         if (verticalGridView != null) {
-            verticalGridView.setAdapter(rowsAdapter);
+            // rowsAdapter 用于 ListRow 样式
+            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
             rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
         }
     }
@@ -266,7 +267,8 @@ public class HomeFragment extends Fragment implements OnItemViewClickedListener 
             }
         }
 
-        verticalGridView.setAdapter(rowsAdapter);
+        // rowsAdapter 用于 ListRow 样式
+            rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
             rowsAdapter.notifyArrayItemRangeChanged(0, rowsAdapter.size());
     }
 

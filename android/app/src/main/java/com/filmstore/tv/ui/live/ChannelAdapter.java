@@ -50,13 +50,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         holder.text1.setText(channel.getName() != null ? channel.getName() : "未知频道");
 
         StringBuilder subtitle = new StringBuilder();
-        if (status != null) {
-            subtitle.append(status);
-        }
-        if (quality != null) {
-            if (subtitle.length() > 0) subtitle.append(" · ");
-            subtitle.append(quality);
-        }
         holder.text2.setText(subtitle.toString());
 
         // 焦点状态

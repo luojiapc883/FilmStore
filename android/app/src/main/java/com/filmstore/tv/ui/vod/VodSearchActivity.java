@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.view.KeyEvent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,11 +61,12 @@ public class VodSearchActivity extends Activity {
     }
 
     private void initViews() {
-        searchInput = findViewById(android.R.id.input);
-        // 如果没有专门的搜索输入框，我们用 TextView 作为临时方案
-        if (searchInput == null) {
-            // 在布局中动态创建搜索输入
-        }
+        // 创建搜索输入框
+        searchInput = new android.widget.EditText(this);
+        searchInput.setHint("搜索...");
+        searchInput.setSingleLine(true);
+        searchInput.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH);
+        ((android.widget.LinearLayout)findViewById(android.R.id.content)).addView(searchInput);
 
         recyclerView = findViewById(R.id.browse_grid);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 5));
