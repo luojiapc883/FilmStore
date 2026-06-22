@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.filmstore.tv.BuildConfig;
 import com.filmstore.tv.FilmStoreApp;
 import com.filmstore.tv.R;
 import com.filmstore.tv.api.ApiClient;
@@ -68,7 +67,7 @@ public class SettingsActivity extends Activity {
 
         // 显示当前版本
         if (versionText != null) {
-            versionText.setText("v" + BuildConfig.VERSION_NAME);
+            versionText.setText("v" + "1.0.0");
         }
 
         // 服务器地址输入

@@ -1,6 +1,7 @@
 package com.filmstore.tv.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 /**
  * 直播源模型 - 对齐 FilmStore 后端返回格式
@@ -83,3 +84,18 @@ public class LiveSource {
         public void setGroup(String group) { this.group = group; }
     }
 }
+
+    /**
+     * 频道分组模型
+     */
+    public static class Group {
+        private String groupName;
+        private List<Channel> channels;
+
+        public Group() {}
+
+        public String getGroupName() { return groupName; }
+        public void setGroupName(String groupName) { this.groupName = groupName; }
+
+        public List<Channel> getChannels() { return channels; }
+        public void setChannels(List<Channel> channels) { this.channels = channels; }
