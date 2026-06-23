@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.filmstore.tv.api.ApiClient;
@@ -102,6 +103,7 @@ public class FilmStoreApp extends Application {
         if (addr.endsWith("/")) {
             addr = addr.substring(0, addr.length() - 1);
         }
+        Log.d("FilmStoreApp", "Server address: " + addr);
         return addr;
     }
 

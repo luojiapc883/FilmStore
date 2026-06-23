@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.filmstore.tv.FilmStoreApp;
@@ -116,8 +117,11 @@ public class LiveActivity extends Activity {
             public void onError(Exception e) {
                 mainHandler.post(() -> {
                     loadingIndicator.setVisibility(View.GONE);
+                    String errMsg = e != null ? e.getMessage() : "未知错误";
+                    Log.e("LiveActivity", "加载直播源失败: " + errMsg, e);
                     emptyView.setText(R.string.error_network);
                     emptyView.setVisibility(View.VISIBLE);
+                    Toast.makeText(LiveActivity.this, "错误: " + errMsg, Toast.LENGTH_LONG).show();
                 });
             }
         });
