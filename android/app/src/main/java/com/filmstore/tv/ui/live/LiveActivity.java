@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -218,8 +219,12 @@ public class LiveActivity extends Activity {
         LiveSource.Channel ch = getChannelAtPosition(position);
         if (ch == null) return;
         if (ch.getUrl() != null && !ch.getUrl().isEmpty()) {
+            // 通过后端代理播放（电视盒子无法直连 nas178.top）
+            String serverAddr = FilmStoreApp.getServerAddress();
+            String proxyUrl = serverAddr + "/proxy/stream?url=" + Uri.encode(ch.getUrl());
+            
             Intent intent = new Intent(this, PlayerActivity.class);
-            intent.putExtra("play_url", ch.getUrl());
+            intent.putExtra("play_url", proxyUrl);
             intent.putExtra("play_name", ch.getName() != null ? ch.getName() : "直播");
             intent.putExtra("is_live", true);
             startActivity(intent);

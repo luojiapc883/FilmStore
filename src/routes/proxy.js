@@ -2,9 +2,63 @@ const express = require('express');
 const router = express.Router();
 const https = require('https');
 const http = require('http');
+const urlModule = require('url');
 
 const { getDb } = require('../db/init');
 const { parseContent } = require('../services/liveParser');
+
+// ======================== 直播流代理 ========================
+
+/**
+ * 代理单个直播流 URL
+ * GET /proxy/stream?url=http://nas178.top:9500/luoiptv/xxx
+ * 后端从 nas178.top 取流，转给盒子（同局域网）
+ */
+router.get('/stream', (req, res) => {
+  const targetUrl = req.query.url;
+  if (!targetUrl) {
+    return res.status(400).json({ code: 400, message: '缺少 url 参数' });
+  }
+
+  const parsed = urlModule.parse(targetUrl);
+  const handler = parsed.protocol === 'https:' ? https : http;
+
+  const options = {
+    hostname: parsed.hostname,
+    port: parsed.port,
+    path: parsed.path,
+    method: 'GET',
+    timeout: 30000,
+    headers: {
+      'User-Agent': 'FilmStore-Proxy/1.0',
+      'Accept': '*/*'
+    }
+  };
+
+  const proxyReq = handler.request(options, (proxyRes) => {
+    // 透传响应头和流
+    res.status(proxyRes.statusCode);
+    Object.keys(proxyRes.headers).forEach(key => {
+      res.set(key, proxyRes.headers[key]);
+    });
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (err) => {
+    if (!res.headersSent) {
+      res.status(502).json({ code: 502, message: '代理流失败: ' + err.message });
+    }
+  });
+
+  proxyReq.on('timeout', () => {
+    proxyReq.destroy();
+    if (!res.headersSent) {
+      res.status(504).json({ code: 504, message: '代理流超时' });
+    }
+  });
+
+  proxyReq.end();
+});
 
 // ======================== 直播源代理 ========================
 
