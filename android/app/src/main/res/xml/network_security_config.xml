@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Allow cleartext traffic for local server -->
+    <!-- 允许所有局域网 IP 的明文 HTTP 流量 -->
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">10.0.0.100</domain>
-        <domain includeSubdomains="true">192.168.0.0/16</domain>
-        <domain includeSubdomains="true">172.16.0.0/12</domain>
+        <domain includeSubdomains="true">192.168.31.161</domain>
+        <domain includeSubdomains="true">nas178.top</domain>
         <domain includeSubdomains="true">localhost</domain>
     </domain-config>
+    <!-- 默认不允许明文 -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
