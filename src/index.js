@@ -15,6 +15,9 @@ const themeRoutes = require('./routes/themes');
 const configRoutes = require('./routes/config');
 const clientRoutes = require('./routes/client');
 const proxyRoutes = require('./routes/proxy');
+const tvboxRoutes = require('./routes/tvbox');
+
+const SERVER_URL = process.env.TVBOX_SERVER_URL || 'http://192.168.31.161:3000';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,6 +56,16 @@ app.use('/api/themes', themeRoutes);
 app.use('/api/config', configRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/proxy', proxyRoutes);
+app.use('/tvbox', tvboxRoutes);
+
+// TVBox 多仓源入口（影视仓多仓模式）
+app.get('/tvbox.json', (req, res) => {
+  res.json({
+    urls: [
+      { url: SERVER_URL + '/tvbox', name: '🎬 FilmStore-点播' },
+    ]
+  });
+});
 
 // 健康检查
 app.get('/api/health', (req, res) => {
