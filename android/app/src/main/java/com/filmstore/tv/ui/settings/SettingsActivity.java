@@ -24,6 +24,8 @@ import com.filmstore.tv.util.PreferencesManager;
 import com.filmstore.tv.model.UpdateInfo;
 import com.filmstore.tv.util.UpdateChecker;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -35,6 +37,7 @@ public class SettingsActivity extends Activity {
 
     private EditText serverAddressInput;
     private Button saveButton;
+    private Button testButton;
     private Button checkUpdateButton;
     private TextView versionText;
     private RecyclerView themeRecyclerView;
@@ -62,27 +65,29 @@ public class SettingsActivity extends Activity {
     private void initViews() {
         serverAddressInput = findViewById(R.id.edit_server_address);
         saveButton = findViewById(R.id.btn_save);
+        testButton = findViewById(R.id.btn_test);
         checkUpdateButton = findViewById(R.id.btn_check_update);
         versionText = findViewById(R.id.tv_version);
 
         // 显示当前版本
         if (versionText != null) {
-            versionText.setText("v" + "1.0.0");
+            versionText.setText("v1.0.0");
         }
 
         // 服务器地址输入
         if (serverAddressInput != null) {
             String currentAddr = preferences.getServerAddress();
-            if (!currentAddr.equals(getString(R.string.settings_server_default))) {
-                serverAddressInput.setText(currentAddr);
-            } else {
-                serverAddressInput.setHint(R.string.settings_server_hint);
-            }
+            serverAddressInput.setText(currentAddr);
         }
 
         // 保存按钮
         if (saveButton != null) {
             saveButton.setOnClickListener(v -> saveSettings());
+        }
+
+        // 测试连接按钮
+        if (testButton != null) {
+            testButton.setOnClickListener(v -> testConnection());
         }
 
         // 检查更新按钮
@@ -97,22 +102,15 @@ public class SettingsActivity extends Activity {
             themeAdapter = new ThemeAdapter(this, new java.util.ArrayList<>());
             themeAdapter.setOnThemeClickListener((name, title) -> {
                 selectedThemeName = name;
-                // 高亮显示选中
             });
             themeRecyclerView.setAdapter(themeAdapter);
         }
     }
 
-    /**
-     * 加载当前配置
-     */
     private void loadCurrentConfig() {
         selectedThemeName = preferences.getSelectedTheme();
     }
 
-    /**
-     * 从服务器加载主题列表
-     */
     private void loadThemeList() {
         FilmStoreApp.getInstance().getApiClient().getConfig(new ApiClient.ApiCallback<ClientConfig>() {
             @Override
@@ -123,8 +121,6 @@ public class SettingsActivity extends Activity {
                         if (themeAdapter != null) {
                             themeAdapter.updateList(themeList);
                         }
-
-                        // 标记当前选中的主题
                         selectedThemeName = preferences.getSelectedTheme();
                         themeAdapter.setSelectedTheme(selectedThemeName);
                     }
@@ -139,8 +135,60 @@ public class SettingsActivity extends Activity {
     }
 
     /**
-     * 保存设置
+     * 测试服务器连接
      */
+    private void testConnection() {
+        if (serverAddressInput == null) return;
+
+        String address = serverAddressInput.getText().toString().trim();
+        if (address.isEmpty()) {
+            Toast.makeText(this, "请先输入服务器地址", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!address.startsWith("http://") && !address.startsWith("https://")) {
+            address = "http://" + address;
+        }
+
+        String testUrl = address + "/api/health";
+        Toast.makeText(this, "正在测试: " + testUrl, Toast.LENGTH_SHORT).show();
+
+        final String finalAddress = address;
+        new Thread(() -> {
+            StringBuilder result = new StringBuilder();
+            try {
+                URL url = new URL(testUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.connect();
+
+                int code = conn.getResponseCode();
+                if (code == 200) {
+                    java.io.BufferedReader br = new java.io.BufferedReader(
+                            new java.io.InputStreamReader(conn.getInputStream()));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        result.append(line);
+                    }
+                    br.close();
+                } else {
+                    result.append("HTTP ").append(code);
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                result.append("失败: ").append(e.getClass().getSimpleName())
+                      .append(" - ").append(e.getMessage());
+            }
+
+            final String msg = result.toString();
+            mainHandler.post(() -> {
+                Toast.makeText(SettingsActivity.this, msg, Toast.LENGTH_LONG).show();
+            });
+        }).start();
+    }
+
     private void saveSettings() {
         if (serverAddressInput == null) return;
 
@@ -150,23 +198,19 @@ public class SettingsActivity extends Activity {
             return;
         }
 
-        // 验证地址格式
         if (!address.startsWith("http://") && !address.startsWith("https://")) {
             address = "http://" + address;
         }
 
-        // 保存服务器地址
         preferences.setServerAddress(address);
         FilmStoreApp.setServerAddress(address);
 
-        // 保存主题选择
         if (selectedThemeName != null) {
             preferences.setSelectedTheme(selectedThemeName);
         }
 
         Toast.makeText(this, R.string.settings_save_success, Toast.LENGTH_SHORT).show();
 
-        // 保存成功后，应用主题
         if (themeList != null && selectedThemeName != null) {
             for (ClientConfig.ThemeItem item : themeList) {
                 if (item.getName().equals(selectedThemeName) && item.getConfig() != null) {
@@ -177,9 +221,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    /**
-     * 检查更新
-     */
     private void checkUpdate() {
         Toast.makeText(this, R.string.settings_checking, Toast.LENGTH_SHORT).show();
 
