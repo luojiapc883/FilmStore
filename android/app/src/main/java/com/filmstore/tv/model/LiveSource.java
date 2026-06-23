@@ -27,10 +27,10 @@ public class LiveSource {
     private int sortOrder;
 
     @SerializedName("is_active")
-    private boolean isActive;
+    private int isActive;
 
     @SerializedName("is_default")
-    private boolean isDefault;
+    private int isDefault;
 
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
@@ -50,11 +50,11 @@ public class LiveSource {
     public int getSortOrder() { return sortOrder; }
     public void setSortOrder(int sortOrder) { this.sortOrder = sortOrder; }
 
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public boolean isActive() { return isActive != 0; }
+    public void setActive(boolean active) { isActive = active ? 1 : 0; }
 
-    public boolean isDefault() { return isDefault; }
-    public void setDefault(boolean aDefault) { isDefault = aDefault; }
+    public boolean isDefault() { return isDefault != 0; }
+    public void setDefault(boolean aDefault) { isDefault = aDefault ? 1 : 0; }
 
     // ==================== 内部类 ====================
 

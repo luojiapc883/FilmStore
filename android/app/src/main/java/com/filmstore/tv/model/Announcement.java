@@ -26,7 +26,7 @@ public class Announcement {
     private String imageUrl;
 
     @SerializedName("is_pinned")
-    private boolean isPinned;
+    private int isPinned;
 
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
@@ -46,8 +46,8 @@ public class Announcement {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public boolean isPinned() { return isPinned; }
-    public void setPinned(boolean pinned) { isPinned = pinned; }
+    public boolean isPinned() { return isPinned != 0; }
+    public void setPinned(boolean pinned) { isPinned = pinned ? 1 : 0; }
 
     /**
      * 是否有效（后端已过滤过期公告，客户端无需再次检查）
