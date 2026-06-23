@@ -15,7 +15,7 @@ public class PreferencesManager {
     private static final String KEY_FIRST_LAUNCH = "first_launch";
     private static final String KEY_PLAY_HISTORY = "play_history";
 
-    private static final String DEFAULT_SERVER = "http://10.0.0.100:3000";
+    private static final String DEFAULT_SERVER = "http://192.168.31.161:3000";
     private static final int MAX_HISTORY_ITEMS = 50;
 
     private SharedPreferences prefs;

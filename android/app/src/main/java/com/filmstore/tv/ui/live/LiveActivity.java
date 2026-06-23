@@ -1,15 +1,17 @@
 package com.filmstore.tv.ui.live;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,10 +26,16 @@ import com.filmstore.tv.model.LiveSource;
 import com.filmstore.tv.ui.player.PlayerActivity;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 直播页面 - 两步：源列表 → 频道列表 → 播放
+ * 直播页面
+ * - 有m3u源时：直接展开频道列表（按group分组）
+ * - 按OK键：弹出分组选择菜单
+ * - 点击频道：播放
+ * - Back键：回到源列表
  */
 public class LiveActivity extends Activity {
 
@@ -42,8 +50,11 @@ public class LiveActivity extends Activity {
 
     // 状态
     private List<LiveSource> sources = new ArrayList<>();
-    private List<LiveSource.Channel> channels = new ArrayList<>();
-    private boolean showingChannels = false; // false=源列表, true=频道列表
+    private List<LiveSource.Channel> allChannels = new ArrayList<>();
+    private Map<String, List<LiveSource.Channel>> groupedChannels = new LinkedHashMap<>();
+    private List<String> groupNames = new ArrayList<>();
+    private String currentGroup = null; // null = 显示全部
+    private boolean showingChannels = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +94,7 @@ public class LiveActivity extends Activity {
         listView = new ListView(this);
         listView.setAdapter(adapter);
         listView.setVisibility(View.GONE);
-        listView.setOnItemClickListener((parent, view, position, id) -> onItemClick(position));
+        listView.setOnItemClickListener((parent, view, position, id) -> onChannelClick(position));
         rootLayout.addView(listView);
 
         loadSources();
@@ -104,15 +115,9 @@ public class LiveActivity extends Activity {
                         return;
                     }
                     sources = result;
-                    showingChannels = false;
-                    titleView.setText(R.string.title_live);
-                    adapter.clear();
-                    for (LiveSource s : sources) {
-                        String fmt = s.getType() != null ? "[" + s.getType() + "] " : "";
-                        adapter.add(fmt + (s.getName() != null ? s.getName() : "未知源"));
-                    }
-                    adapter.notifyDataSetChanged();
-                    listView.setVisibility(View.VISIBLE);
+                    // 只取第一个源（NAS178直播 m3u），自动加载频道
+                    LiveSource firstSource = sources.get(0);
+                    loadChannels(firstSource);
                 });
             }
 
@@ -125,30 +130,6 @@ public class LiveActivity extends Activity {
                 });
             }
         });
-    }
-
-    private void onItemClick(int position) {
-        if (showingChannels) {
-            // 频道列表 → 播放
-            if (position >= 0 && position < channels.size()) {
-                LiveSource.Channel ch = channels.get(position);
-                if (ch.getUrl() != null && !ch.getUrl().isEmpty()) {
-                    Intent intent = new Intent(this, PlayerActivity.class);
-                    intent.putExtra("play_url", ch.getUrl());
-                    intent.putExtra("play_name", ch.getName() != null ? ch.getName() : "直播");
-                    intent.putExtra("is_live", true);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "频道地址无效", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else {
-            // 源列表 → 加载频道
-            if (position >= 0 && position < sources.size()) {
-                LiveSource source = sources.get(position);
-                loadChannels(source);
-            }
-        }
     }
 
     private void loadChannels(LiveSource source) {
@@ -167,14 +148,12 @@ public class LiveActivity extends Activity {
                         emptyView.setVisibility(View.VISIBLE);
                         return;
                     }
-                    channels = result;
+                    allChannels = result;
+                    groupChannels();
                     showingChannels = true;
+                    currentGroup = null; // 默认显示全部
                     titleView.setText(source.getName() != null ? source.getName() : "频道列表");
-                    adapter.clear();
-                    for (LiveSource.Channel ch : channels) {
-                        adapter.add(ch.getName() != null ? ch.getName() : "未知频道");
-                    }
-                    adapter.notifyDataSetChanged();
+                    applyGroupFilter();
                     listView.setVisibility(View.VISIBLE);
                 });
             }
@@ -191,11 +170,92 @@ public class LiveActivity extends Activity {
         });
     }
 
+    /**
+     * 按 group 分组
+     */
+    private void groupChannels() {
+        groupedChannels.clear();
+        groupNames.clear();
+        for (LiveSource.Channel ch : allChannels) {
+            String key = ch.getGroup() != null && !ch.getGroup().isEmpty() ? ch.getGroup() : "未分组";
+            List<LiveSource.Channel> list = groupedChannels.get(key);
+            if (list == null) {
+                list = new ArrayList<>();
+                groupedChannels.put(key, list);
+                groupNames.add(key);
+            }
+            list.add(ch);
+        }
+    }
+
+    /**
+     * 应用分组过滤到列表
+     */
+    private void applyGroupFilter() {
+        adapter.clear();
+        if (currentGroup == null) {
+            // 显示全部
+            for (LiveSource.Channel ch : allChannels) {
+                adapter.add(ch.getName() != null ? ch.getName() : "未知频道");
+            }
+        } else {
+            List<LiveSource.Channel> groupList = groupedChannels.get(currentGroup);
+            if (groupList != null) {
+                for (LiveSource.Channel ch : groupList) {
+                    adapter.add(ch.getName() != null ? ch.getName() : "未知频道");
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
+        String title = "NAS178直播";
+        if (currentGroup != null) {
+            title += " · " + currentGroup;
+        }
+        titleView.setText(title);
+    }
+
+    private void onChannelClick(int position) {
+        LiveSource.Channel ch = getChannelAtPosition(position);
+        if (ch == null) return;
+        if (ch.getUrl() != null && !ch.getUrl().isEmpty()) {
+            Intent intent = new Intent(this, PlayerActivity.class);
+            intent.putExtra("play_url", ch.getUrl());
+            intent.putExtra("play_name", ch.getName() != null ? ch.getName() : "直播");
+            intent.putExtra("is_live", true);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "频道地址无效", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private LiveSource.Channel getChannelAtPosition(int position) {
+        if (currentGroup == null) {
+            if (position >= 0 && position < allChannels.size()) {
+                return allChannels.get(position);
+            }
+        } else {
+            List<LiveSource.Channel> groupList = groupedChannels.get(currentGroup);
+            if (groupList != null && position >= 0 && position < groupList.size()) {
+                return groupList.get(position);
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (showingChannels) {
+            // 遥控器 OK/DPAD_CENTER：弹出分组菜单
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || 
+                keyCode == KeyEvent.KEYCODE_ENTER ||
+                keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+                showGroupDialog();
+                return true;
+            }
+        }
+
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (showingChannels) {
-                // 返回源列表
                 showingChannels = false;
                 titleView.setText(R.string.title_live);
                 adapter.clear();
@@ -204,11 +264,45 @@ public class LiveActivity extends Activity {
                     adapter.add(fmt + (s.getName() != null ? s.getName() : "未知源"));
                 }
                 adapter.notifyDataSetChanged();
+                listView.setVisibility(View.VISIBLE);
                 return true;
             }
             finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 弹出分组选择菜单
+     */
+    private void showGroupDialog() {
+        String[] items = new String[groupNames.size() + 1];
+        items[0] = "全部频道 (" + allChannels.size() + ")";
+        for (int i = 0; i < groupNames.size(); i++) {
+            List<LiveSource.Channel> g = groupedChannels.get(groupNames.get(i));
+            items[i + 1] = groupNames.get(i) + " (" + (g != null ? g.size() : 0) + ")";
+        }
+
+        // 找当前选中项
+        int checkedItem = 0;
+        if (currentGroup != null) {
+            int idx = groupNames.indexOf(currentGroup);
+            if (idx >= 0) checkedItem = idx + 1;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("选择分组")
+                .setSingleChoiceItems(items, checkedItem, (dialog, which) -> {
+                    if (which == 0) {
+                        currentGroup = null;
+                    } else {
+                        currentGroup = groupNames.get(which - 1);
+                    }
+                    applyGroupFilter();
+                    dialog.dismiss();
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 }
