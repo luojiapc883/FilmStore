@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.filmstore.tv.FilmStoreApp;
@@ -27,23 +27,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 直播页面 - 展示直播源列表，点击播放
+ * 直播页面 - 两步：源列表 → 频道列表 → 播放
  */
 public class LiveActivity extends Activity {
 
     private LinearLayout rootLayout;
-    private ListView sourceListView;
+    private ListView listView;
     private ProgressBar loadingIndicator;
     private TextView emptyView;
+    private TextView titleView;
 
     private ArrayAdapter<String> adapter;
-    private List<LiveSource> sources = new ArrayList<>();
     private Handler mainHandler;
+
+    // 状态
+    private List<LiveSource> sources = new ArrayList<>();
+    private List<LiveSource.Channel> channels = new ArrayList<>();
+    private boolean showingChannels = false; // false=源列表, true=频道列表
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mainHandler = new Handler(Looper.getMainLooper());
 
         rootLayout = new LinearLayout(this);
@@ -51,7 +55,7 @@ public class LiveActivity extends Activity {
         rootLayout.setBackgroundColor(getResources().getColor(R.color.bgPrimary));
         setContentView(rootLayout);
 
-        TextView titleView = new TextView(this);
+        titleView = new TextView(this);
         titleView.setText(R.string.title_live);
         titleView.setTextSize(28);
         titleView.setTextColor(getResources().getColor(R.color.textPrimary, getTheme()));
@@ -76,22 +80,19 @@ public class LiveActivity extends Activity {
         rootLayout.addView(emptyView);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
-        sourceListView = new ListView(this);
-        sourceListView.setAdapter(adapter);
-        sourceListView.setVisibility(View.GONE);
-        sourceListView.setOnItemClickListener((parent, view, position, id) -> {
-            if (position >= 0 && position < sources.size()) {
-                onSourceClicked(sources.get(position));
-            }
-        });
-        rootLayout.addView(sourceListView);
+        listView = new ListView(this);
+        listView.setAdapter(adapter);
+        listView.setVisibility(View.GONE);
+        listView.setOnItemClickListener((parent, view, position, id) -> onItemClick(position));
+        rootLayout.addView(listView);
 
-        loadLiveSources();
+        loadSources();
     }
 
-    private void loadLiveSources() {
+    private void loadSources() {
         loadingIndicator.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
+        listView.setVisibility(View.GONE);
 
         FilmStoreApp.getInstance().getApiClient().getLiveSources(new ApiClient.ApiCallback<List<LiveSource>>() {
             @Override
@@ -102,14 +103,16 @@ public class LiveActivity extends Activity {
                         emptyView.setVisibility(View.VISIBLE);
                         return;
                     }
-                    sources.clear();
+                    sources = result;
+                    showingChannels = false;
+                    titleView.setText(R.string.title_live);
                     adapter.clear();
-                    for (LiveSource s : result) {
+                    for (LiveSource s : sources) {
                         String fmt = s.getType() != null ? "[" + s.getType() + "] " : "";
                         adapter.add(fmt + (s.getName() != null ? s.getName() : "未知源"));
                     }
                     adapter.notifyDataSetChanged();
-                    sourceListView.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.VISIBLE);
                 });
             }
 
@@ -117,45 +120,92 @@ public class LiveActivity extends Activity {
             public void onError(Exception e) {
                 mainHandler.post(() -> {
                     loadingIndicator.setVisibility(View.GONE);
-                    String errMsg = e != null ? e.getMessage() : "未知错误";
-                    Log.e("LiveActivity", "加载直播源失败: " + errMsg, e);
                     emptyView.setText(R.string.error_network);
                     emptyView.setVisibility(View.VISIBLE);
-                    Toast.makeText(LiveActivity.this, "错误: " + errMsg, Toast.LENGTH_LONG).show();
                 });
             }
         });
     }
 
-    private void onSourceClicked(LiveSource source) {
-        String url = source.getUrl();
-        String name = source.getName();
-        String type = source.getType();
-
-        if (url == null || url.isEmpty()) {
-            Toast.makeText(this, "该源未配置地址", Toast.LENGTH_SHORT).show();
-            return;
+    private void onItemClick(int position) {
+        if (showingChannels) {
+            // 频道列表 → 播放
+            if (position >= 0 && position < channels.size()) {
+                LiveSource.Channel ch = channels.get(position);
+                if (ch.getUrl() != null && !ch.getUrl().isEmpty()) {
+                    Intent intent = new Intent(this, PlayerActivity.class);
+                    intent.putExtra("play_url", ch.getUrl());
+                    intent.putExtra("play_name", ch.getName() != null ? ch.getName() : "直播");
+                    intent.putExtra("is_live", true);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "频道地址无效", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            // 源列表 → 加载频道
+            if (position >= 0 && position < sources.size()) {
+                LiveSource source = sources.get(position);
+                loadChannels(source);
+            }
         }
+    }
 
-        // m3u/txt 是列表文件，需要通过后端代理 /proxy/live/:id 解析频道列表
-        // 但当前版本简化：提示用户通过管理后台添加流地址
-        if ("m3u".equalsIgnoreCase(type) || "txt".equalsIgnoreCase(type)) {
-            Toast.makeText(this, name + " 为频道列表格式，加载中...", Toast.LENGTH_SHORT).show();
-            // TODO: 后续版本实现代理接口调用来获取频道列表
-            return;
-        }
+    private void loadChannels(LiveSource source) {
+        loadingIndicator.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
 
-        // 直接流地址：打开播放器
-        Intent intent = new Intent(this, PlayerActivity.class);
-        intent.putExtra("play_url", url);
-        intent.putExtra("play_name", name != null ? name : "直播");
-        intent.putExtra("is_live", true);
-        startActivity(intent);
+        FilmStoreApp.getInstance().getApiClient().getLiveChannels(source.getId(),
+                new ApiClient.ApiCallback<List<LiveSource.Channel>>() {
+            @Override
+            public void onSuccess(List<LiveSource.Channel> result) {
+                mainHandler.post(() -> {
+                    loadingIndicator.setVisibility(View.GONE);
+                    if (result == null || result.isEmpty()) {
+                        emptyView.setText("该源暂无频道数据");
+                        emptyView.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    channels = result;
+                    showingChannels = true;
+                    titleView.setText(source.getName() != null ? source.getName() : "频道列表");
+                    adapter.clear();
+                    for (LiveSource.Channel ch : channels) {
+                        adapter.add(ch.getName() != null ? ch.getName() : "未知频道");
+                    }
+                    adapter.notifyDataSetChanged();
+                    listView.setVisibility(View.VISIBLE);
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                mainHandler.post(() -> {
+                    loadingIndicator.setVisibility(View.GONE);
+                    Toast.makeText(LiveActivity.this,
+                            "加载频道失败: " + (e != null ? e.getMessage() : "未知错误"),
+                            Toast.LENGTH_LONG).show();
+                });
+            }
+        });
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (showingChannels) {
+                // 返回源列表
+                showingChannels = false;
+                titleView.setText(R.string.title_live);
+                adapter.clear();
+                for (LiveSource s : sources) {
+                    String fmt = s.getType() != null ? "[" + s.getType() + "] " : "";
+                    adapter.add(fmt + (s.getName() != null ? s.getName() : "未知源"));
+                }
+                adapter.notifyDataSetChanged();
+                return true;
+            }
             finish();
             return true;
         }

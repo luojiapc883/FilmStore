@@ -480,6 +480,43 @@ public class ApiClient {
         });
     }
 
+    // ==================== 直播代理 ====================
+
+    /**
+     * 通过代理获取单个直播源的频道列表
+     */
+    public void getLiveChannels(long sourceId, final ApiCallback<List<LiveSource.Channel>> callback) {
+        String baseUrl = FilmStoreApp.getServerAddress();
+        String url = baseUrl + "/proxy/live/" + sourceId + "?format=json";
+
+        httpClient.newCall(new Request.Builder().url(url).get().build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        callback.onError(new IOException("请求失败: " + response.code()));
+                        return;
+                    }
+                    String body = response.body().string();
+                    ApiResponse<List<LiveSource.Channel>> apiResp = gson.fromJson(body,
+                            new TypeToken<ApiResponse<List<LiveSource.Channel>>>() {}.getType());
+                    if (apiResp.isSuccess()) {
+                        callback.onSuccess(apiResp.getData());
+                    } else {
+                        callback.onError(new IOException(apiResp.getMessage()));
+                    }
+                } catch (Exception e) {
+                    callback.onError(e);
+                }
+            }
+        });
+    }
+
     // ==================== 接口回调 ====================
 
     /**
